@@ -33,6 +33,16 @@ import 'dart:isolate';
 /// qabul qilingan habarni qayta ishlash uchun listen methodidan foydalanadi
 /// * SendPort Bu xabarlarni boshqa izolyatsiyaga yuborish uchun ishlatiladi.
 /// Har bir ReceivePort o‘zining **SendPort**iga ega.
+///
+/// kamchiliklari
+/// * har bir isolate ozining xotira maydoniga ega va ular o'rtasida togridan
+/// togri malumot almashinuvi yoq.
+/// Isolate-larni yaratish boshqa asinxrom vazifalarga qaraganda resurs talab
+/// qiladi
+/// * Xabar almashinuvi ma’lumotni serializatsiya qilishni talab qiladi, bu
+/// ba’zida sekinlashishga olib keladi.(shu joyoga qoshimcha qilamiz, masalan
+/// xotiradan katta xajmdagi malumot oqimochi bolsangiz oldin fileni oqib olib
+/// unga ishlov berasiz bu vaqt oladi va dasturni sekinlashtiradi)
 
 /// example--katta hajmli file oqimoqchi bolsak isolate yasash tartibi
 void fileReadWithIsolate(SendPort mainSendPort) {
@@ -63,6 +73,9 @@ int calculate(int limit) {
 }
 
 void main() async {
+
+  // final int sum = await compute(calculate,calculate(212121221));
+
   ReceivePort mainReceivePort = ReceivePort();
   Isolate? workerIsolate;
   workerIsolate = await Isolate.spawn(
@@ -86,3 +99,4 @@ void main() async {
   final int result = await Isolate.run(() => calculate(1000000));
   print('Asosiy isolate: Hisoblash tugadi. Natija: $result');
 }
+
